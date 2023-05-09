@@ -1,20 +1,20 @@
 // get all the posts
 const connection = require('../Model/db');
 module.exports.getAllPost = function(req,res) {
-    connection.query(`select fullName,email,profilepic,video_url from posts p inner join users
+    connection.query(`select fullName,email,profilepic,video_url,p.id from posts p inner join users
     u on u.id = p.user_id`,function(err,result) {
         if(err) {
-            res.json({
+            res.status(501).json({
                 message: err.message
             })
         } else {
             if(result.length > 0) {
-                res.json({
+                res.status(201).json({
                     message: "Data Found SuccessFully",
-                    ...result
+                    data : [...result]
                 })
             } else {
-                res.json({
+                res.status(401).json({
                     message: "No Record Found"
                 })
             }
@@ -94,18 +94,20 @@ module.exports.createPost = function(req,res) {
 // like a post
 module.exports.dolike = function(req,res) {
     let id = req.params.id;
-    let token = req.cookies.login;
+    let token = req.user;
+    console.log(id);
     if(token) {
         const userId = token.id;
-        connection.query("insert into likes (post_id,user_id) values(?,?)",[id,userId],function(err,res) {
+        connection.query("insert into likes (post_id,user_id) values(?,?)",[id,userId],function(err,result) {
             if(err) {
-                res.json({
+                console.log(err.message);
+                res.status(400).json({
                     message: err.message
                 })
             } else {
-                res.json({
+                res.status(200).json({
                     message: "You Liked the post",
-                    ...result
+                    data: {...result}
                 })
             }
         })
@@ -119,18 +121,18 @@ module.exports.dolike = function(req,res) {
 // unlike a post
 module.exports.dontlike = function(req,res) {
     let id = req.params.id;
-    let token = req.cookies.login;
+    let token = req.user;
     if(token) {
         const userId = token.id;
-        connection.query("delete from likes where post_id = ? and user_id = ?",[id,userId],function(err,res) {
+        connection.query("delete from likes where post_id = ? and user_id = ?",[id,userId],function(err,result) {
             if(err) {
                 res.json({
                     message: err.message
-                })
+                });
             } else {
                 res.json({
                     message: "You UnLiked the post",
-                    ...result
+                    data : {...result}
                 })
             }
         })
@@ -147,15 +149,15 @@ module.exports.allLikes = function(req,res) {
     let token = req.cookies.login;
     if(token) {
         const userId = token.id;
-        connection.query("select user_id as id from likes where post_id = ?",[id],function(err,res) {
+        connection.query("select user_id as id from likes where post_id = ?",[id],function(err,result) {
             if(err) {
-                res.json({
+                res.status(400).json({
                     message: err.message
                 })
             } else {
-                res.json({
+                res.status(200).json({
                     message: "Data Fetched SuccessFull",
-                    ...result
+                    likes: [...result]
                 })
             }
         })
@@ -199,13 +201,13 @@ module.exports.createComment = function(req,res) {
     let post_id = req.params.id;
     let user_id = req.user.id;
     let text = req.body.text;
-    connection.query(`insert into comments (user_id,post_id,text) values(?,?,?)`,[post_id,user_id,text],function(err,res) {
+    connection.query(`insert into comments (user_id,post_id,text) values(?,?,?)`,[user_id,post_id,text],function(err,result) {
         if(err) {
-            res.json({
+            res.status(400).json({
                 message: "There Might be Some Server Error"
             })
         } else {
-            res.json({
+            res.status(200).json({
                 message: "Comment Created SuccessFully"
             })
         }
@@ -232,13 +234,13 @@ module.exports.deleteComment = function(req,res) {
 module.exports.updateComment = function(req,res) {
     let id = req.params.id;
     let text = req.body.text;
-    connection.query(`update comments set text = ? where id = ?`,[text,id],function(err,res) {
+    connection.query(`update comments set text = ? where id = ?`,[text,id],function(err,result) {
         if(err) {
-            res.json({
+            res.status(400).json({
                 message: "There Might be some Internal Server Error"
             })
         } else {
-            res.json({
+            res.status(200).json({
                 message: "Comment Updated SuccessFully"
             })
         }
@@ -248,24 +250,20 @@ module.exports.updateComment = function(req,res) {
 //get all comments on a post
 module.exports.getComments = function(req,res) {
     let post_id = req.params.id;
-    connection.query(`select fullName,email,profile_pic,text from comments c inner join
-    users u on u.user_id = c.user_id
+    connection.query(`select fullName,email,profilepic,text from comments c inner join
+    users u on u.id = c.user_id
     where post_id = ?`,[post_id],function(err,result) {
         if(err) {
-            res.json({
+            res.status(400).json({
                 message: "There Might be Some Error while getting the data"
             })
         } else {
-            if(result.length > 0) {
-                res.json({
+            
+                res.status(200).json({
                     message: "Data Fetched SuccessFully",
-                    ...result
+                    comments : [...result]
                 })
-            } else {
-                res.json({
-                    message: "Sorry No Data Found"
-                })
-            }
+            
         }
     })
 };
