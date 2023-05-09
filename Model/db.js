@@ -1,5 +1,7 @@
 const mysql = require('mysql')
-const {user,password} = require('../secrets');
+require('dotenv').config()
+const user = process.env.user
+const password = process.env.password
 let connection = mysql.createConnection({
     host: "db4free.net",
     user: user,

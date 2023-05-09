@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
-const emaili = require('../secrets').email;
-const appPassword = require('../secrets').appPassword;
+require('dotenv').config();
+const emaili = process.env.email;
+const appPassword = process.env.appPassword;
 module.exports = async function sendMail(email,message,subject="OTP") {
     try {
         const mess = (String)(message);
