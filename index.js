@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
+    origin: 'http://localhost:3000'
 }));
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
