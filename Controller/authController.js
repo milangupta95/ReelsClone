@@ -1,6 +1,5 @@
 // signup
 const connection = require('../Model/db');
-const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 const mailSender = require('../Utility/MailSender');
 

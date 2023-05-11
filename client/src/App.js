@@ -21,7 +21,7 @@ function App() {
       <React.Fragment>
         <Navbar />
         <Routes>
-          <Route path='/' element={<Login />}></Route>
+          <Route path='/' element={<Login/>}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/forgotpassword' element={<ForgotPassword/>}></Route>
