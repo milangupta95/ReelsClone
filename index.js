@@ -4,6 +4,7 @@ const cors = require("cors");
 const multer = require("multer");
 const app = express();
 const stream = require('stream');
+const path = require('path')
 app.use(cookieParser());
 const fs = require('fs');
 const connection = require('./Model/db');
@@ -12,10 +13,11 @@ let fileN = "";
 const oauth2client = require('./Utility/googleapi.jsx');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-    credentials: true,
-    origin: "http://localhost:3000"
-}));
+
+// app.use(cors({
+//     credentials: true,
+//     origin: "http://localhost:3000"
+// }));
 // const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
 //         cb(null, './uploads')
@@ -46,7 +48,7 @@ const uploadFile = async (fileObject) => {
         version: 'v3',
         auth: oauth2client
     })
-    const {data} = await drive.files.create({
+    const { data } = await drive.files.create({
         media: {
             mimeType: fileObject.mimeType,
             body: bufferStream
@@ -56,7 +58,7 @@ const uploadFile = async (fileObject) => {
             parents: ['1A7OmC8buPeT_kuDl3ne03nG5-mMqeZhA']
         }
     });
-    if(data) {
+    if (data) {
         console.log(data);
         fileN = data.id;
     }
@@ -110,7 +112,16 @@ app.get('/video/:filename', (req, res) => {
     const videoStream = fs.createReadStream(videoPath, { start, end });
     videoStream.pipe(res);
 });
-
+app.get("*", function (_, res) {
+    var filePath = "./client/build/index.html";
+    var resolvedPath = path.resolve(filePath);
+    res.sendFile(
+        resolvedPath,
+        function (err) {
+            res.status(500).send(err);
+        }
+    );
+});
 app.listen(8080, function () {
     console.log('Listening on port 8080');
 });

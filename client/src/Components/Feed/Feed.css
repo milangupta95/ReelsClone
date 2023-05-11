@@ -1,0 +1,13 @@
+.videocontainer {
+    height: 80vh;
+    border-radius: 20px;
+    background-color: white;
+    width: 90vw;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+}
+
+.videocontainer::-webkit-scrollbar {
+    display: none;
+}
