@@ -2,11 +2,11 @@
 const connection = require('../Model/db');
 const jsonwebtoken = require('jsonwebtoken');
 const mailSender = require('../Utility/MailSender');
-
+const bcrypt = require('bcrypt');
 module.exports.signup = async (req, res) => {
     try {
         let { fullName, email, password, profilepic } = req.body;
-        // password = await bcrypt.hash(password, 10);
+        password = await bcrypt.hash(password, 10);
         connection.query("insert into users (fullName,email,password,profilepic) values(?,?,?,?)",
             [fullName, email, password, profilepic], function (err, result) {
                 if (err) {
@@ -42,8 +42,8 @@ module.exports.login = function (req, res) {
                 })
             } else {
                 if (result.length > 0) {
-                    // const ans = await bcrypt.compare(password, result[0].password);
-                    if (password === result[0].password) {
+                    const ans = await bcrypt.compare(password, result[0].password);
+                    if (ans) {
                         delete result[0].password;
                         const login = jsonwebtoken.sign({ ...result[0] }, "secret");
                         res.cookie('login', login);
@@ -124,7 +124,7 @@ module.exports.forgotPassword = function (req, res) {
 module.exports.resetPassword = async function(req,res) {
     try {
         let {email,otp,password} = req.body;
-        // hashedpassword = await bcrypt.hash(password, 10);
+        hashedpassword = await bcrypt.hash(password, 10);
         otp = (String)(otp);
         connection.query("select email from forgotpassword where email = ? and otp = ?",[email,otp],(err,result) => {
             if(err) {
@@ -143,7 +143,7 @@ module.exports.resetPassword = async function(req,res) {
                                 message : "Unable to Reset your password"
                             })
                         } else {
-                            connection.query("update users set password = ? where email = ?",[password,email],(err,result) => {
+                            connection.query("update users set password = ? where email = ?",[hashedpassword,email],(err,result) => {
                                 if(err) {
                                     res.status(500).json({
                                         message : "Unable To update password"
