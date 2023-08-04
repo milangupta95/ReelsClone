@@ -1,5 +1,5 @@
 const AWS = require("aws-sdk");
-
+const connection = require('../Model/db');
 const s3 = new AWS.S3();
 module.exports.uploadVideo = async function (req, res) {
     try {
@@ -9,7 +9,7 @@ module.exports.uploadVideo = async function (req, res) {
         const fileContent = file.buffer;
         // Setting up S3 upload parameters
         const params = {
-            Bucket: "cyclic-weak-gold-blackbuck-toga-ap-southeast-2",
+            Bucket: "cyclic-fine-pear-anemone-suit-ap-northeast-1",
             Key: Date.now() + file.originalname, // File name you want to save as in S3
             Body: fileContent
         };
@@ -47,7 +47,7 @@ module.exports.retriveVideo = function(req,res) {
     const fileName = req.params.filename;
     console.log(fileName);
     const options = {
-        Bucket: "cyclic-weak-gold-blackbuck-toga-ap-southeast-2",
+        Bucket: "cyclic-fine-pear-anemone-suit-ap-northeast-1",
         Key: fileName
     };
     // Create new read steam from s3 getObject
