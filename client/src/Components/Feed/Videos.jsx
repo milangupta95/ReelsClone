@@ -110,7 +110,7 @@ function Videos(props) {
         <div className='flex flex-col justify-center items-center sm:flex-row mb-10'>
             {props.post ? <div className='flex flex-col items-center justify-center'>
                 <video onEnded={handleScroll} className='w-[100vw] h-[72vh] sm:w-[35vw] sm:h-[72vh] shadow-sm shadow-grey-800' onClick={handleVideoClick} muted autoPlay>
-                    <source src={`https://drive.google.com/uc?export=download&id=${props.post.video_url}`}></source>
+                    <source src={`http://localhost:8080/video/${props.post.video_url}`}></source>
                 </video>
                 <div className='w-full shadow-lg shadow-grey-800 px-5 flex justify-between items-center mb-5 h-[50px]'>
                     <div className='flex'>

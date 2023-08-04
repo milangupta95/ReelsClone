@@ -60,7 +60,7 @@ function Feed() {
             const file = document.querySelector("#video").files[0];
             const data = new FormData();
             data.append("video", file);
-            const res = await api.post("/videouplaod", data, {
+            const res = await api.post("/video/videouplaod", data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

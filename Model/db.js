@@ -3,10 +3,10 @@ require('dotenv').config()
 const user = process.env.user
 const password = process.env.password
 let connection = mysql.createConnection({
-    host: "sql12.freesqldatabase.com",
+    host: "db4free.net",
     user: user,
     password: password,
-    database: "sql12617589",
+    database: "instagramreels",
     port : 3306
 })
 
