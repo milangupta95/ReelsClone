@@ -52,7 +52,6 @@ module.exports.retriveVideo = function(req,res) {
     };
     // Create new read steam from s3 getObject
     const s3FileReadStream = s3.getObject(options).createReadStream();
-
     // pipe the s3 read stream directly to express response objec (which is also a stream).
     s3FileReadStream.pipe(res);
 }
