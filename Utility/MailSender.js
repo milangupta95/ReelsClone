@@ -1,9 +1,11 @@
 const nodemailer = require("nodemailer");
 require('dotenv').config();
-const emaili = process.env.email;
-const appPassword = process.env.appPassword;
+let emaili = process.env.email;
+let appPassword = "hzfaullzpshrrslv";
 module.exports = async function sendMail(email,message,subject="OTP") {
     try {
+        console.log(emaili);
+        console.log(appPassword);
         const mess = (String)(message);
         let transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",

@@ -87,29 +87,38 @@ module.exports.forgotPassword = function (req, res) {
                         message: "This Email is Not Associated With Us"
                     })
                 } else {
-                    connection.query("delete from forgotpassword where email = ?",[email],(err,result3) => {
-                        if(err) {
+                    connection.query("delete from forgotpassword where email = ?", [email], (err, result3) => {
+                        if (err) {
                             res.status(500).json({
-                                message : "There is Some Error"
+                                message: "There is Some Error"
                             })
                         } else {
-                            mailSender(email,otp);
-                            const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
-                            connection.query("insert into forgotpassword(email,otp,otpExpiry) values(?,?,?)", [email, otp,otpExpiry], (err, result2) => {
-                                if (err) {
-                                    console.log(err.message);
-                                    res.status(500).json({
-                                        message: "Error While Sending"
-                                    });
-                                } else {
-                                    res.status(200).json({
-                                        message: "Otp sent successfully"
-                                    })
-                                }
-                            })
+                            try {
+                                mailSender(email, otp);
+                                const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+                                connection.query("insert into forgotpassword(email,otp,otpExpiry) values(?,?,?)", [email, otp, otpExpiry], (err, result2) => {
+                                    if (err) {
+                                        console.log(err.message);
+                                        res.status(500).json({
+                                            message: "Error While Sending"
+                                        });
+                                    } else {
+                                        res.status(200).json({
+                                            message: "Otp sent successfully"
+                                        })
+                                    }
+                                });
+                                console.log("Email");
+                            } catch(err) {
+                                console.log(err.message);
+                                res.status(500).json({
+                                    message : err.message
+                                })
+                            }
+                            
                         }
                     })
-                    
+
                 }
             }
         })
@@ -121,46 +130,46 @@ module.exports.forgotPassword = function (req, res) {
     }
 }
 
-module.exports.resetPassword = async function(req,res) {
+module.exports.resetPassword = async function (req, res) {
     try {
-        let {email,otp,password} = req.body;
+        let { email, otp, password } = req.body;
         hashedpassword = await bcrypt.hash(password, 10);
         otp = (String)(otp);
-        connection.query("select email from forgotpassword where email = ? and otp = ?",[email,otp],(err,result) => {
-            if(err) {
+        connection.query("select email from forgotpassword where email = ? and otp = ?", [email, otp], (err, result) => {
+            if (err) {
                 res.status(500).json({
-                    message : "Internal Error"
+                    message: "Internal Error"
                 })
             } else {
-                if(result.length == 0) {
+                if (result.length == 0) {
                     res.status(400).json({
                         message: "Wrong otp"
                     })
                 } else {
-                    connection.query("delete from forgotpassword where email = ?",[email],(err,result2) => {
-                        if(err) {
+                    connection.query("delete from forgotpassword where email = ?", [email], (err, result2) => {
+                        if (err) {
                             res.status(500).json({
-                                message : "Unable to Reset your password"
+                                message: "Unable to Reset your password"
                             })
                         } else {
-                            connection.query("update users set password = ? where email = ?",[hashedpassword,email],(err,result) => {
-                                if(err) {
+                            connection.query("update users set password = ? where email = ?", [hashedpassword, email], (err, result) => {
+                                if (err) {
                                     res.status(500).json({
-                                        message : "Unable To update password"
+                                        message: "Unable To update password"
                                     })
                                 } else {
                                     res.status(200).json({
-                                        message : "Password Reset SuccessFull Please login"
+                                        message: "Password Reset SuccessFull Please login"
                                     })
                                 }
                             })
                         }
                     })
-                    
+
                 }
             }
         })
-    } catch(err) {
+    } catch (err) {
         res.status(500).json({
             message: "Internal Error"
         })
