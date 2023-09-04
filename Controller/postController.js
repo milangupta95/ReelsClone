@@ -217,13 +217,13 @@ module.exports.createComment = function(req,res) {
 // delete a comment
 module.exports.deleteComment = function(req,res) {
     let id = req.params.id;
-    connection.query(`delete from comments where id = ?`,[id],function(err,res) {
+    connection.query(`delete from comments where id = ?`,[id],function(err,result) {
         if(err) {
-            res.json({
+            res.status(500).json({
                 message: "There Might be Some Server Error"
             })
         } else {
-            res.json({
+            res.status(200).json({
                 message: "Comment Deleted SuccessFully"
             })
         }
