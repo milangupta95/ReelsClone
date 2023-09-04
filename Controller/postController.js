@@ -26,19 +26,19 @@ module.exports.getAllPost = function(req,res) {
 module.exports.getOneUser = function(req,res) {
     const id = req.params.id;
     connection.query(`select fullName,email,profile_pic,video_url from posts p inner join users u
-    on u.id = p.user_id where p.id = ?`,[id],function(err,result) {
+    on u.id = p.user_id where u.id = ?`,[id],function(err,result) {
         if(err) {
-            res.json({
+            res.status(500).json({
                 message: "There Might be some Error while Getting Data"
             })
         } else {
             if(result.length > 0) {
-                res.json({
+                res.status(200).json({
                     message: "Data Fetched SuccessFully",
                     ...result[0]
                 })
             } else {
-                res.json({
+                res.status(400).json({
                     message: "No Result Found"
                 })
             }
@@ -49,20 +49,20 @@ module.exports.getOneUser = function(req,res) {
 // get our posts
 module.exports.myposts = function(req,res) {
     const id = req.user.id;
-    connection.query(`select fullName,email,profile_pic,video_url from posts p inner join users u
+    connection.query(`select u.fullName,u.email,u.profile_pic,p.video_url from posts p inner join users u
     on u.id = p.user_id where u.id = ?`,[id],function(err,result) {
         if(err) {
-            res.json({
+            res.status(500).json({
                 message: "There might be some Error while fetching the data"
             })
         } else {
             if(result.length > 0) {
-                res.json({
+                res.status(200).json({
                     message : "Data Fetched SuccessFully",
                     ...result
                 })
             } else {
-                res.json({
+                res.status(404).json({
                     message : "No Record Found"
                 })
             }
