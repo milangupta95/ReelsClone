@@ -174,14 +174,14 @@ module.exports.countLikes = function(req,res) {
     let token = req.cookies.login;
     if(token) {
         const userId = token.id;
-        connection.query("select count(user_id) as count from likes where post_id = ?",[id],function(err,res) {
+        connection.query("select count(user_id) as count from likes where post_id = ?",[id],function(err,result) {
             if(err) {
                 res.json({
                     message: err.message
                 })
             } else {
                 res.json({
-                    message: "Data Feteched SuccessFull",
+                    message: "Data Feteched SuccessFully",
                     ...result
                 })
             }
