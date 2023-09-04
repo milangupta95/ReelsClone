@@ -3,5 +3,5 @@ const {getProfile, getAllUsers} = require('../Controller/userController');
 const express = require('express');
 const userRouter = express.Router();
 userRouter.get("/profile",protectedRoute,getProfile);
-userRouter.get("/getAllUser",getAllUsers);
+userRouter.get("/",getAllUsers);
 module.exports = userRouter;

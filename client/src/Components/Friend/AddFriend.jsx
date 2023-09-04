@@ -13,7 +13,7 @@ function AddFriend() {
     useEffect(() => {
         setLoading(true);
         async function getAllUsers() {
-            const res = await api.get('friend/getAllFriendSuggestion');
+            const res = await api.get('friends/suggestions');
             if (res.status === 200) {
                 if (res.data.users.length > 0) {
                     setUsers(res.data.users);
@@ -32,7 +32,7 @@ function AddFriend() {
     useEffect(() => {
         async function getRequests() {
             setLoading(true);
-            const res = await api.get('friend/getallRecievedFriendRequests');
+            const res = await api.get('friends/recieved');
             if (res.status === 200) {
                 console.log(res.data.users);
                 setRequests(res.data.users);

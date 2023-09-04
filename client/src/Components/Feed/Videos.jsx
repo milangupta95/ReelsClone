@@ -5,6 +5,7 @@ import Authcontext from '../AuthContextProvider';
 import { useContext, useState, useEffect } from 'react';
 import { Button, IconButton, TextField } from '@mui/material'
 import { InputBase } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import api from '../../utility';
 function Videos(props) {
     const userData = useContext(Authcontext);
@@ -19,13 +20,22 @@ function Videos(props) {
 
     const makeComment = async () => {
         try {
-            setAllComments([...allComments, {
-                fullName: userData.user.data.user.fullName,
-                email: userData.user.data.user.email,
-                profilepic: userData.user.data.user.profilepic,
-                text: myComment
-            }]);
-            const res = await api.post(`post/comment/createComment/${props.post.id}`, {
+            if(allComments != null && allComments.length > 0) {
+                setAllComments([...allComments, {
+                    fullName: userData.user.data.user.fullName,
+                    email: userData.user.data.user.email,
+                    profilepic: userData.user.data.user.profilepic,
+                    text: myComment
+                }]);
+            } else {
+                setAllComments([{
+                    fullName: userData.user.data.user.fullName,
+                    email: userData.user.data.user.email,
+                    profilepic: userData.user.data.user.profilepic,
+                    text: myComment
+                }]);
+            }
+            const res = await api.post(`post/comments/${props.post.id}`, {
                 text: myComment
             });
             if (res.status === 200) {
@@ -42,8 +52,8 @@ function Videos(props) {
     useEffect(() => {
         setLoading(true);
         async function fetchData() {
-            const commentRes = await api.get(`post/comment/getComments/${props.post.id}`);
-            const likeRes = await api.get(`post/likes/allLikes/${props.post.id}`);
+            const commentRes = await api.get(`post/comments/${props.post.id}`);
+            const likeRes = await api.get(`post/likes/${props.post.id}`);
             if (commentRes.status === 200 && likeRes.status === 200) {
                 setallLikes(likeRes.data.likes);
                 setAllComments(commentRes.data.comments);
@@ -80,7 +90,7 @@ function Videos(props) {
             if (isUserLiked === false) {
                 setIsUserLiked(true);
                 setCountLikes(countLikes + 1);
-                const res = await api.post(`post/likes/dolike/${props.post.id}`);
+                const res = await api.post(`post/likes/${props.post.id}`);
                 if (res.status === 200) {
                     console.log("Liked Video");
                 } else if (res.status === 400 || res.status === 500) {
@@ -91,7 +101,7 @@ function Videos(props) {
             } else {
                 setIsUserLiked(false);
                 setCountLikes(countLikes - 1);
-                const res = await api.post(`post/likes/dontlike/${props.post.id}`);
+                const res = await api.delete(`post/likes/${props.post.id}`);
                 if (res.status === 200) {
                     console.log("Unliked Video");
                 } else if (res.status === 400) {
@@ -110,7 +120,8 @@ function Videos(props) {
         <div className='flex flex-col justify-center items-center sm:flex-row mb-10'>
             {props.post ? <div className='flex flex-col items-center justify-center'>
                 <video onEnded={handleScroll} className='w-[100vw] h-[72vh] sm:w-[35vw] sm:h-[72vh] shadow-sm shadow-grey-800' onClick={handleVideoClick} muted autoPlay>
-                    <source src={`http://localhost:8080/video/${props.post.video_url}`}></source>
+                    <source src={`
+                    /video/${props.post.video_url}`}></source>
                 </video>
                 <div className='w-full shadow-lg shadow-grey-800 px-5 flex justify-between items-center mb-5 h-[50px]'>
                     <div className='flex'>
@@ -137,9 +148,9 @@ function Videos(props) {
             <div className={commentShow ? "overflow-y-scroll z-[100] w-[75vw] h-[40vh] sm:my-[0] mt-[-100%] sm:py-5 sm:w-[25vw] sm:h-[72vh] rounded-lg text-white bg-[#1c1c1b] relative" : "hidden"}>
                 <div className='flex items-center border-b-2 justify-between px-2'>
                     <h1 className='text-xl font-bold  mb-2 border-white border-b-3'>Comments</h1>
-                    <IconButton onClick={handleCommentClick} className='text-white'><span class="material-symbols-outlined cursor-pointer">
-                        close
-                    </span></IconButton>
+                    <IconButton onClick={handleCommentClick} className='text-white'>
+                        <CloseIcon/>
+                    </IconButton>
                 </div>
                 {loading ? <div>Loading...</div> : allComments ? 
                 <div className=''>

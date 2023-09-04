@@ -39,7 +39,7 @@ function Feed() {
     useEffect(() => {
         setLoading(true);
         async function fetchData() {
-            const res = await api.get("/post/getAllPost");
+            const res = await api.get("/post");
             console.log(res);
             if (res.status >= 200 && res.status <= 299) {
                 setPosts(res.data.data);
@@ -60,7 +60,7 @@ function Feed() {
             const file = document.querySelector("#video").files[0];
             const data = new FormData();
             data.append("video", file);
-            const res = await api.post("/video/videouplaod", data, {
+            const res = await api.post("/video/", data, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

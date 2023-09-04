@@ -2,14 +2,13 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import api from '../../utility';
 import { Avatar,Button } from '@mui/material';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 function RecievedFriendRequests(props) {
     const [isRequestAccepted,setFriendRequestAccepted] = useState(false);
     const [isFriendRequestRejected,setFriendRequestRejected] = useState(false);
     const acceptFriendRequest = async () => {
         try {
-            const res = await api.patch(`friend/accept/${props.request.id}`);
+            const res = await api.patch(`friends/${props.request.id}`);
             setFriendRequestAccepted(true);
             if(res.status === 200) {
                 window.alert("Friend Request Accepted");
@@ -24,7 +23,7 @@ function RecievedFriendRequests(props) {
     }
     const rejectFriendRequest = async () => {
         try {
-            const res = await api.delete(`friend/reject/${props.request.id}`);
+            const res = await api.delete(`friends/${props.request.id}`);
             setFriendRequestRejected(true);
             if(res.status === 200) {
                 window.alert("Friend Request Rejected");

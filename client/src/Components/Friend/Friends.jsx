@@ -10,7 +10,7 @@ function Friends() {
     useEffect(() => {
         setLoading(true);
         async function fetchFriends() {
-            const res = await api.get("friend/allFriends");
+            const res = await api.get("/friends/");
             if (res.status === 200) {
                 if (res.data.friends) {
                     console.log(res.data.friends);

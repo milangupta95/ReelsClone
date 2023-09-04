@@ -3,17 +3,17 @@ const {getAllPost,getOneUser,myposts,createPost,dolike,dontlike,allLikes,countLi
 
 const express = require('express');
 const postRouter = express.Router();
-postRouter.get("/getAllPost",protectedRoute,getAllPost);
+postRouter.get("/",protectedRoute,getAllPost);
 postRouter.get("/:id",protectedRoute,getOneUser);
-postRouter.get("/myposts/",protectedRoute,myposts);
-postRouter.post("/createPost/",protectedRoute,createPost);
-postRouter.post('/likes/dolike/:id',protectedRoute,dolike);
-postRouter.post('/likes/dontlike/:id',protectedRoute,dontlike);
-postRouter.get('/likes/allLikes/:id',protectedRoute,allLikes);
-postRouter.get('/likes/countLikes/:id',protectedRoute,countLikes);
-postRouter.post("/comment/createComment/:id",protectedRoute,createComment);
-postRouter.delete("/comment/deleteComment/:id",protectedRoute,deleteComment);
-postRouter.patch("/comment/updateComment/:id",protectedRoute,updateComment);
-postRouter.get("/comment/getComments/:id",protectedRoute,getComments);
+postRouter.get("/user/",protectedRoute,myposts);
+postRouter.post("/",protectedRoute,createPost);
+postRouter.post('/likes/:id',protectedRoute,dolike);
+postRouter.delete('/likes/:id',protectedRoute,dontlike);
+postRouter.get('/likes/:id',protectedRoute,allLikes);
+postRouter.get('/likes/count/:id',protectedRoute,countLikes);
+postRouter.post("/comments/:id",protectedRoute,createComment);
+postRouter.delete("/comments/:id",protectedRoute,deleteComment);
+postRouter.patch("/comments/:id",protectedRoute,updateComment);
+postRouter.get("/comments/:id",protectedRoute,getComments);
 
 module.exports = postRouter;

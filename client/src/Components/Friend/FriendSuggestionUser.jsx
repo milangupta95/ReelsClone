@@ -8,7 +8,7 @@ function FriendSuggestionUser(props) {
     const addFriend = async () => {
         try {
             setSend(true);
-            const res = await api.post("friend/sendFriendReq", {
+            const res = await api.post("/friends/", {
                 id: props.user.id
             });
             if (res.status === 200) {
