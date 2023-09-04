@@ -250,7 +250,7 @@ module.exports.updateComment = function(req,res) {
 //get all comments on a post
 module.exports.getComments = function(req,res) {
     let post_id = req.params.id;
-    connection.query(`select fullName,email,profilepic,text from comments c inner join
+    connection.query(`select fullName,email,profilepic,text,post_id from comments c inner join
     users u on u.id = c.user_id
     where post_id = ?`,[post_id],function(err,result) {
         if(err) {
