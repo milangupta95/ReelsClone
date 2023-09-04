@@ -25,11 +25,11 @@ module.exports.getAllPost = function(req,res) {
 // get post by id
 module.exports.getOneUser = function(req,res) {
     const id = req.params.id;
-    connection.query(`select fullName,email,profile_pic,video_url from posts p inner join users u
+    connection.query(`select fullName,email,profilepic,video_url from posts p inner join users u
     on u.id = p.user_id where u.id = ?`,[id],function(err,result) {
         if(err) {
             res.status(500).json({
-                message: "There Might be some Error while Getting Data"
+                message: err.message
             })
         } else {
             if(result.length > 0) {
@@ -49,11 +49,11 @@ module.exports.getOneUser = function(req,res) {
 // get our posts
 module.exports.myposts = function(req,res) {
     const id = req.user.id;
-    connection.query(`select u.fullName,u.email,u.profile_pic,p.video_url from posts p inner join users u
+    connection.query(`select u.fullName,u.email,u.profilepic,p.video_url from posts p inner join users u
     on u.id = p.user_id where u.id = ?`,[id],function(err,result) {
         if(err) {
             res.status(500).json({
-                message: "There might be some Error while fetching the data"
+                message: err.message
             })
         } else {
             if(result.length > 0) {
